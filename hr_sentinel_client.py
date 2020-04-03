@@ -11,7 +11,7 @@ def add_patients():
     if r.status_code != 200:
         print("Error: {} - {}".format(r.status_code, r.text))
     else:
-        print("Success {}".format(r.text))
+        print("Success: {}".format(r.text))
 
 
 if __name__ == "__main__":

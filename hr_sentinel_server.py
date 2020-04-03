@@ -16,9 +16,22 @@ def post_new_patient():
     return good status to client
     """
     in_dict = request.get_json()
+    check_result = verify_new_patient_info(in_dict)
     add_patient_to_db(in_dict["patient_id"], in_dict["attending_email"],
                       in_dict["patient_age"])
     return "Patient added", 200
+
+
+def verify_new_patient_info(in_dict):
+    expected_keys = ("patient_id", "attending_email", "patient_age")
+    expected_types = (int, str, int)
+    # must be able to parse inputs for numbers though
+    for i, key in enumerate(expected_keys):
+        if key not in in_dict.keys():
+            return "{} key not found" .format(key)
+        if type(in_dict[key]) is not expected_types[i]:
+            return "{} value not correct type" .format(key)
+    return True
 
 
 if __name__ == "__main__":

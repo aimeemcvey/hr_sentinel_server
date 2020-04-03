@@ -25,7 +25,6 @@ def post_new_patient():
         return check_result, 400
     add_patient_to_db(in_dict["patient_id"], in_dict["attending_email"],
                       in_dict["patient_age"])
-    logging.info("New patient added to database: ID={}".format(in_dict["patient_id"]))
     return "Patient added", 200
 
 
@@ -33,6 +32,7 @@ def add_patient_to_db(id, email, age):
     new_patient = {"patient_id": id, "attending_email": email,
                    "patient_age": age}
     patient_db.append(new_patient)
+    logging.info("New patient added to database: ID={}".format(in_dict["patient_id"]))
     print("db is {}".format(patient_db))
     return True
 

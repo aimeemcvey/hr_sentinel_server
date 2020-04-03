@@ -35,7 +35,7 @@ def add_patient_to_db(id, email, age):
     logging.info("New patient added to database: ID={}"
                  .format(new_patient["patient_id"]))
     print("db is {}".format(patient_db))
-    return True
+    return new_patient
 
 
 def verify_new_patient_info(in_dict):

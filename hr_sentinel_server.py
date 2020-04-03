@@ -1,7 +1,7 @@
 # hr_sentinel_server.py
 from flask import Flask, jsonify, request
 
-db = []
+patient_db = []
 
 app = Flask(__name__)
 
@@ -20,6 +20,14 @@ def post_new_patient():
     add_patient_to_db(in_dict["patient_id"], in_dict["attending_email"],
                       in_dict["patient_age"])
     return "Patient added", 200
+
+
+def add_patient_to_db(id, email, age):
+    new_patient = {"patient_id": id, "attending_email": email,
+                   "patient_age": age}
+    patient_db.append(new_patient)
+    print("db is {}" .format(patient_db))
+    return True
 
 
 def verify_new_patient_info(in_dict):

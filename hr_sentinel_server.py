@@ -32,7 +32,8 @@ def add_patient_to_db(id, email, age):
     new_patient = {"patient_id": id, "attending_email": email,
                    "patient_age": age}
     patient_db.append(new_patient)
-    logging.info("New patient added to database: ID={}".format(in_dict["patient_id"]))
+    logging.info("New patient added to database: ID={}"
+                 .format(new_patient["patient_id"]))
     print("db is {}".format(patient_db))
     return True
 

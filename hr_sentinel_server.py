@@ -41,7 +41,6 @@ def add_patient_to_db(id, email, age):
 def verify_new_patient_info(in_dict):
     expected_keys = ("patient_id", "attending_email", "patient_age")
     expected_types = (int, str, int)
-    # must be able to parse inputs for numbers though
     for i, key in enumerate(expected_keys):
         if key not in in_dict.keys():
             return "{} key not found".format(key)

@@ -28,9 +28,14 @@ def verify_new_patient_info(in_dict):
     # must be able to parse inputs for numbers though
     for i, key in enumerate(expected_keys):
         if key not in in_dict.keys():
-            return "{} key not found" .format(key)
+            return "{} key not found".format(key)
         if type(in_dict[key]) is not expected_types[i]:
-            return "{} value not correct type" .format(key)
+            if key == "patient_id" or key == "patient_age":
+                try:
+                    int(in_dict[key])
+                except ValueError:
+                    return "{} value not correct type".format(key)
+            return "{} value not correct type".format(key)
     return True
 
 

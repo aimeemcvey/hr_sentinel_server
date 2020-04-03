@@ -35,7 +35,8 @@ def verify_new_patient_info(in_dict):
                     int(in_dict[key])
                 except ValueError:
                     return "{} value not correct type".format(key)
-            return "{} value not correct type".format(key)
+            else:
+                return "{} value not correct type".format(key)
     return True
 
 

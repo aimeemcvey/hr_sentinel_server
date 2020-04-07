@@ -70,12 +70,15 @@ def post_heart_rate():
     if check_result is not True:
         return check_result, 400
     if is_patient_in_database(in_dict["patient_id"]) is False:
-        return "Patient {} is not found on server" .format(in_dict["patient_id"]), 400
+        return "Patient {} is not found on server" \
+                   .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
+    is_tachycardic()
     if add_hr:
-        return "Heart rate added to patient ID {}" .format(in_dict["patient_id"]), 200
-    else:
-        return "Unknown problem", 400
+        return "Heart rate added to patient ID {}" \
+                   .format(in_dict["patient_id"]), 200
+    # else:
+    #     return "Unknown problem", 400
 
 
 def verify_heart_rate_info(in_dict):
@@ -108,15 +111,25 @@ def add_hr_to_db(in_dict):
     # store datetime
     # if tachycardic, send email
     dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(in_dict)
-    print(in_dict["heart_rate"])
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            # patient["heart_rate"] = in_dict["heart_rate"]
             patient["heart_rate"].append((in_dict["heart_rate"], dt))
             print("db is {}" .format(patient_db))
             return True
     return False
+
+
+def is_tachycardic():
+    # tachycardic for patient and age
+    for patient in patient_db:
+        print(patient["heart_rate"][0][0])
+        hr = patient["heart_rate"][0][0]
+        if patient["patient_age"] > 15 and hr > 100:
+            print("Patient is tachycardic")
+            return True
+        else:
+            return False
+
 
 
 if __name__ == "__main__":

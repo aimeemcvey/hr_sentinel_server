@@ -1,6 +1,7 @@
 # hr_sentinel_server.py
 from flask import Flask, jsonify, request
 import logging
+from datetime import datetime
 
 logging.basicConfig(filename="hr_sentinel_server_info.log", filemode="w",
                     level=logging.INFO)
@@ -30,7 +31,7 @@ def post_new_patient():
 
 def add_patient_to_db(id, email, age):
     new_patient = {"patient_id": id, "attending_email": email,
-                   "patient_age": age}
+                   "patient_age": age, "heart_rate": []}
     patient_db.append(new_patient)
     logging.info("New patient added to database: ID={}"
                  .format(new_patient["patient_id"]))
@@ -65,14 +66,12 @@ def post_heart_rate():
     return good status to client
     """
     in_dict = request.get_json()
-    print(in_dict)
     check_result = verify_heart_rate_info(in_dict)
     if check_result is not True:
         return check_result, 400
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
-    print(add_hr)
     if add_hr:
         return "Heart rate added to patient ID {}" .format(in_dict["patient_id"]), 200
     else:
@@ -108,9 +107,13 @@ def add_hr_to_db(in_dict):
     # store hr measurement in their record
     # store datetime
     # if tachycardic, send email
+    dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(in_dict)
+    print(in_dict["heart_rate"])
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"] = in_dict["heart_rate"]
+            # patient["heart_rate"] = in_dict["heart_rate"]
+            patient["heart_rate"].append((in_dict["heart_rate"], dt))
             print("db is {}" .format(patient_db))
             return True
     return False

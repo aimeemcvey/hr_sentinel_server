@@ -66,6 +66,8 @@ def post_heart_rate():
     """
     hr_dict = request.get_json()
     check_result = verify_heart_rate_info(hr_dict)
+    if check_result is not True:
+        return check_result, 400
 
 
 def verify_heart_rate_info(in_dict):
@@ -75,13 +77,13 @@ def verify_heart_rate_info(in_dict):
         if key not in in_dict.keys():
             return "{} key not found".format(key)
         if type(in_dict[key]) is not expected_types[i]:
-            if key == "patient_id" or key == "heart_rate":
-                try:
-                    in_dict[key] = int(in_dict[key])
-                except ValueError:
-                    return "{} value not correct type".format(key)
-            else:
+            # if key == "patient_id" or key == "heart_rate":
+            try:
+                in_dict[key] = int(in_dict[key])
+            except ValueError:
                 return "{} value not correct type".format(key)
+            # else:
+            #     return "{} value not correct type".format(key)
     return True
 
 

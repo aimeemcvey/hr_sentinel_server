@@ -55,6 +55,17 @@ def verify_new_patient_info(in_dict):
     return True
 
 
+@app.route("/api/heart_rate", methods=["POST"])
+def post_heart_rate():
+    """
+    Receive the posting JSON
+    Verify the JSON contains correct keys and data
+    If data is bad, reject request with bad status to client
+    If data is good, add patient to database
+    return good status to client
+    """
+
+
 if __name__ == "__main__":
     # init_database()
     app.run()

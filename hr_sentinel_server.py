@@ -65,14 +65,16 @@ def post_heart_rate():
     return good status to client
     """
     in_dict = request.get_json()
+    print(in_dict)
     check_result = verify_heart_rate_info(in_dict)
     if check_result is not True:
         return check_result, 400
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
+    print(add_hr)
     if add_hr:
-        return "Heart rate added to patient id {}" .format(in_dict["patient_id"]), 200
+        return "Heart rate added to patient ID {}" .format(in_dict["patient_id"]), 200
     else:
         return "Unknown problem", 400
 
@@ -106,9 +108,9 @@ def add_hr_to_db(in_dict):
     # store hr measurement in their record
     # store datetime
     # if tachycardic, send email
-    for patient in db:
+    for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient.append(in_dict["heart_rate"])
+            patient["heart_rate"] = in_dict["heart_rate"]
             print("db is {}" .format(patient_db))
             return True
     return False

@@ -61,14 +61,16 @@ def post_heart_rate():
     Receive the posting JSON
     Verify the JSON contains correct keys and data
     If data is bad, reject request with bad status to client
-    If data is good, add HR to database
+    If data is good, add HR to database, send email
     return good status to client
     """
-    hr_dict = request.get_json()
-    check_result = verify_heart_rate_info(hr_dict)
+    in_dict = request.get_json()
+    check_result = verify_heart_rate_info(in_dict)
     if check_result is not True:
         return check_result, 400
-    add_hr_to_db(hr_dict["patient_id"], hr_dict["heart_rate"])
+    if is_patient_in_database(in_dict["patient_id"]) is False:
+        return "Patient {} is not found on server" .format(in_dict["patient_id"]), 400
+    add_hr_to_db(in_dict["patient_id"], in_dict["heart_rate"])
     return "Heart rate added", 200
 
 
@@ -87,6 +89,13 @@ def verify_heart_rate_info(in_dict):
             # else:
             #     return "{} value not correct type".format(key)
     return True
+
+
+def is_patient_in_database(id):
+    for patient in db:
+        if patient["patient_id"] == id:
+            return True
+    return False
 
 
 def add_hr_to_db(id, hr):

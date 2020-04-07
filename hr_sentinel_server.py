@@ -70,8 +70,11 @@ def post_heart_rate():
         return check_result, 400
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" .format(in_dict["patient_id"]), 400
-    add_hr_to_db(in_dict["patient_id"], in_dict["heart_rate"])
-    return "Heart rate added", 200
+    add_hr = add_hr_to_db(in_dict)
+    if add_hr:
+        return "Heart rate added to patient id {}" .format(in_dict["patient_id"]), 200
+    else:
+        return "Unknown problem", 400
 
 
 def verify_heart_rate_info(in_dict):
@@ -92,17 +95,23 @@ def verify_heart_rate_info(in_dict):
 
 
 def is_patient_in_database(id):
-    for patient in db:
+    for patient in patient_db:
         if patient["patient_id"] == id:
             return True
     return False
 
 
-def add_hr_to_db(id, hr):
+def add_hr_to_db(in_dict):
     # identify patient
     # store hr measurement in their record
     # store datetime
     # if tachycardic, send email
+    for patient in db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            patient.append(in_dict["heart_rate"])
+            print("db is {}" .format(patient_db))
+            return True
+    return False
 
 
 if __name__ == "__main__":

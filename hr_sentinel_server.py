@@ -65,6 +65,24 @@ def post_heart_rate():
     return good status to client
     """
     hr_dict = request.get_json()
+    check_result = verify_heart_rate_info(hr_dict)
+
+
+def verify_heart_rate_info(in_dict):
+    expected_keys = ("patient_id", "heart_rate")
+    expected_types = (int, int)
+    for i, key in enumerate(expected_keys):
+        if key not in in_dict.keys():
+            return "{} key not found".format(key)
+        if type(in_dict[key]) is not expected_types[i]:
+            if key == "patient_id" or key == "heart_rate":
+                try:
+                    in_dict[key] = int(in_dict[key])
+                except ValueError:
+                    return "{} value not correct type".format(key)
+            else:
+                return "{} value not correct type".format(key)
+    return True
 
 
 if __name__ == "__main__":

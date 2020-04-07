@@ -64,6 +64,7 @@ def post_heart_rate():
     If data is good, add patient to database
     return good status to client
     """
+    hr_dict = request.get_json()
 
 
 if __name__ == "__main__":

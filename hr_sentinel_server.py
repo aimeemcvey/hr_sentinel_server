@@ -73,7 +73,7 @@ def post_heart_rate():
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
-    tach = is_tachycardic()
+    tach = is_tachycardic(in_dict)
     add_tach_to_db(in_dict, tach)
     if add_hr:
         return "Heart rate added to patient ID {}" \
@@ -117,18 +117,19 @@ def add_hr_to_db(in_dict):
     return False
 
 
-def is_tachycardic():
+def is_tachycardic(in_dict):
     for patient in patient_db:
-        hr = patient["heart_rate"][0]
-        if (1 <= patient["patient_age"] < 3 and hr > 151) \
-                or (3 <= patient["patient_age"] < 5 and hr > 137) \
-                or (5 <= patient["patient_age"] < 8 and hr > 133) \
-                or (8 <= patient["patient_age"] < 12 and hr > 130) \
-                or (12 <= patient["patient_age"] < 15 and hr > 119) \
-                or (patient["patient_age"] >= 15 and hr > 100):
-            return True
-        else:
-            return False
+        if patient["patient_id"] == in_dict["patient_id"]:
+            hr = patient["heart_rate"][0]
+            if (1 <= patient["patient_age"] < 3 and hr > 151) \
+                    or (3 <= patient["patient_age"] < 5 and hr > 137) \
+                    or (5 <= patient["patient_age"] < 8 and hr > 133) \
+                    or (8 <= patient["patient_age"] < 12 and hr > 130) \
+                    or (12 <= patient["patient_age"] < 15 and hr > 119) \
+                    or (patient["patient_age"] >= 15 and hr > 100):
+                return True
+            else:
+                return False
 
 
 def add_tach_to_db(in_dict, tach):

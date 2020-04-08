@@ -97,3 +97,13 @@ def test_is_patient_in_database_false():
     answer = is_patient_in_database(id)
     expected = False
     assert answer == expected
+
+
+def test_add_hr_to_db():
+    from hr_sentinel_server import add_patient_to_db
+    add_patient_to_db(12, "gthcgth@duke.edu", 91)
+    from hr_sentinel_server import add_hr_to_db
+    in_dict = {"patient_id": 12, "heart_rate": 75}
+    answer = add_hr_to_db(in_dict)
+    expected = True
+    assert answer == expected

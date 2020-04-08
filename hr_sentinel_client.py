@@ -14,5 +14,13 @@ def add_patients():
         print("Success: {}".format(r.text))
 
 
+def add_hr():
+    new_hr = {"patient_id": 1, "heart_rate": 101}
+    r = requests.post(server_name+"/api/heart_rate", json=new_hr)
+    print(r.status_code)
+    print(r.text)
+
+
 if __name__ == "__main__":
     add_patients()
+    add_hr()

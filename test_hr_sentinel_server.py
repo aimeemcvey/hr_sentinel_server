@@ -56,10 +56,24 @@ def test_verify_heart_rate_info_good():
 
 
 @pytest.mark.parametrize("in_dict, expected", [
-    ({"patient_name": 1, "heart_rate": 101}, "patient_id key not found"),
-    ({"patient_id": 1, "hr": 101}, "heart_rate key not found"),
+    ({"patient_name": 1, "heart_rate": 82}, "patient_id key not found"),
+    ({"patient_id": 1, "hr": 64}, "heart_rate key not found"),
 ])
 def test_verify_heart_rate_info_badkey(in_dict, expected):
+    from hr_sentinel_server import verify_heart_rate_info
+    answer = verify_heart_rate_info(in_dict)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("in_dict, expected", [
+    ({"patient_id": "1", "heart_rate": 73}, True),
+    ({"patient_id": "1", "heart_rate": "101"}, True),
+    ({"patient_id": "one", "heart_rate": 56},
+     "patient_id value not correct type"),
+    ({"patient_id": 2, "heart_rate": "high"},
+     "heart_rate value not correct type"),
+])
+def test_verify_heart_rate_info_badtype(in_dict, expected):
     from hr_sentinel_server import verify_heart_rate_info
     answer = verify_heart_rate_info(in_dict)
     assert answer == expected

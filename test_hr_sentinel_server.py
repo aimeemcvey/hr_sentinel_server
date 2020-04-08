@@ -79,11 +79,21 @@ def test_verify_heart_rate_info_badtype(in_dict, expected):
     assert answer == expected
 
 
-def test_is_patient_in_database():
+def test_is_patient_in_database_true():
     from hr_sentinel_server import add_patient_to_db
     add_patient_to_db(12, "gthcgth@duke.edu", 91)
     from hr_sentinel_server import is_patient_in_database
     id = 12
     answer = is_patient_in_database(id)
     expected = True
+    assert answer == expected
+
+
+def test_is_patient_in_database_false():
+    from hr_sentinel_server import add_patient_to_db
+    add_patient_to_db(12, "gthcgth@duke.edu", 91)
+    from hr_sentinel_server import is_patient_in_database
+    id = 13
+    answer = is_patient_in_database(id)
+    expected = False
     assert answer == expected

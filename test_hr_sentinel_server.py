@@ -45,3 +45,11 @@ def test_verify_new_patient_info_badtype(in_dict, expected):
     from hr_sentinel_server import verify_new_patient_info
     answer = verify_new_patient_info(in_dict)
     assert answer == expected
+
+
+def test_verify_heart_rate_info_good():
+    from hr_sentinel_server import verify_heart_rate_info
+    in_dict = {"patient_id": 1, "heart_rate": 101}
+    answer = verify_heart_rate_info(in_dict)
+    expected = True
+    assert answer == expected

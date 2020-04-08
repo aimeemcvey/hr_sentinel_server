@@ -110,20 +110,15 @@ def add_hr_to_db(in_dict):
     # identify patient
     # store hr measurement, dt, tach in their record
     # if tachycardic, send email
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             patient["heart_rate"].append(in_dict["heart_rate"])
-            patient["heart_rate"].append(timestamp)
-            print("db is {}".format(patient_db))
             return True
     return False
 
 
 def is_tachycardic():
-    # tachycardic for patient and age
     for patient in patient_db:
-        print(patient["heart_rate"][0])
         hr = patient["heart_rate"][0]
         if (1 <= patient["patient_age"] < 3 and hr > 151) \
                 or (3 <= patient["patient_age"] < 5 and hr > 137) \
@@ -131,13 +126,13 @@ def is_tachycardic():
                 or (8 <= patient["patient_age"] < 12 and hr > 130) \
                 or (12 <= patient["patient_age"] < 15 and hr > 119) \
                 or (patient["patient_age"] >= 15 and hr > 100):
-            print("Patient is tachycardic")
             return True
         else:
             return False
 
 
 def add_tach_to_db(in_dict, tach):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if tach:
         status = "tachycardic"
     elif not tach:
@@ -145,6 +140,7 @@ def add_tach_to_db(in_dict, tach):
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             patient["heart_rate"].append(status)
+            patient["heart_rate"].append(timestamp)
             print("db is {}".format(patient_db))
             return True
     return False

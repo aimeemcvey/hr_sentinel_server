@@ -124,7 +124,12 @@ def is_tachycardic():
     for patient in patient_db:
         print(patient["heart_rate"][0][0])
         hr = patient["heart_rate"][0][0]
-        if patient["patient_age"] > 15 and hr > 100:
+        if (1 <= patient["patient_age"] < 3 and hr > 151)\
+                or (3 <= patient["patient_age"] < 5 and hr > 137)\
+                or (5 <= patient["patient_age"] < 8 and hr > 133)\
+                or (8 <= patient["patient_age"] < 12 and hr > 130)\
+                or (12 <= patient["patient_age"] < 15 and hr > 119)\
+                or (patient["patient_age"] >= 15 and hr > 100):
             print("Patient is tachycardic")
             return True
         else:

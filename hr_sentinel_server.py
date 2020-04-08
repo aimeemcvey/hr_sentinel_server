@@ -73,6 +73,7 @@ def post_heart_rate():
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
+    is_tachycardic()
     if add_hr:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
@@ -116,6 +117,18 @@ def add_hr_to_db(in_dict):
             print("db is {}" .format(patient_db))
             return True
     return False
+
+
+def is_tachycardic():
+    # tachycardic for patient and age
+    for patient in patient_db:
+        print(patient["heart_rate"][0][0])
+        hr = patient["heart_rate"][0][0]
+        if patient["patient_age"] > 15 and hr > 100:
+            print("Patient is tachycardic")
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":

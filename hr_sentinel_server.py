@@ -73,7 +73,8 @@ def post_heart_rate():
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
-    is_tachycardic()
+    tach = is_tachycardic()
+    add_tach_to_db(in_dict, tach)
     if add_hr:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
@@ -107,14 +108,14 @@ def is_patient_in_database(id):
 
 def add_hr_to_db(in_dict):
     # identify patient
-    # store hr measurement in their record
-    # store datetime
+    # store hr measurement, dt, tach in their record
     # if tachycardic, send email
-    dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"].append((in_dict["heart_rate"], dt))
-            print("db is {}" .format(patient_db))
+            patient["heart_rate"].append(in_dict["heart_rate"])
+            patient["heart_rate"].append(timestamp)
+            print("db is {}".format(patient_db))
             return True
     return False
 
@@ -122,18 +123,31 @@ def add_hr_to_db(in_dict):
 def is_tachycardic():
     # tachycardic for patient and age
     for patient in patient_db:
-        print(patient["heart_rate"][0][0])
-        hr = patient["heart_rate"][0][0]
-        if (1 <= patient["patient_age"] < 3 and hr > 151)\
-                or (3 <= patient["patient_age"] < 5 and hr > 137)\
-                or (5 <= patient["patient_age"] < 8 and hr > 133)\
-                or (8 <= patient["patient_age"] < 12 and hr > 130)\
-                or (12 <= patient["patient_age"] < 15 and hr > 119)\
+        print(patient["heart_rate"][0])
+        hr = patient["heart_rate"][0]
+        if (1 <= patient["patient_age"] < 3 and hr > 151) \
+                or (3 <= patient["patient_age"] < 5 and hr > 137) \
+                or (5 <= patient["patient_age"] < 8 and hr > 133) \
+                or (8 <= patient["patient_age"] < 12 and hr > 130) \
+                or (12 <= patient["patient_age"] < 15 and hr > 119) \
                 or (patient["patient_age"] >= 15 and hr > 100):
             print("Patient is tachycardic")
             return True
         else:
             return False
+
+
+def add_tach_to_db(in_dict, tach):
+    if tach:
+        status = "tachycardic"
+    elif not tach:
+        status = "not tachycardic"
+    for patient in patient_db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            patient["heart_rate"].append(status)
+            print("db is {}".format(patient_db))
+            return True
+    return False
 
 
 if __name__ == "__main__":

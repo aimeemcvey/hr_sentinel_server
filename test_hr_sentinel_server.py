@@ -53,3 +53,13 @@ def test_verify_heart_rate_info_good():
     answer = verify_heart_rate_info(in_dict)
     expected = True
     assert answer == expected
+
+
+@pytest.mark.parametrize("in_dict, expected", [
+    ({"patient_name": 1, "heart_rate": 101}, "patient_id key not found"),
+    ({"patient_id": 1, "hr": 101}, "heart_rate key not found"),
+])
+def test_verify_heart_rate_info_badkey(in_dict, expected):
+    from hr_sentinel_server import verify_heart_rate_info
+    answer = verify_heart_rate_info(in_dict)
+    assert answer == expected

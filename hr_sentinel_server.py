@@ -75,11 +75,11 @@ def post_heart_rate():
     add_hr_to_db(in_dict)
     tach = is_tachycardic(in_dict)
     add_tach_to_db(in_dict, tach)
+    if tach:
+        email_physician(in_dict)
     if add_tach_to_db:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
-    if tach:
-        email_physician(in_dict)
     # else:
     #     return "Unknown problem", 400
 
@@ -149,11 +149,22 @@ def add_tach_to_db(in_dict, tach):
 
 def email_physician(in_dict):
     # if tachycardic, send email
-    message = {"patient_id": 3, "heart_rate": 80}
+    # patient_id, the tachycardic heart rate, and dt stamp
+    for patient in patient_db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            to_email = patient["attending_email"]
+            content = "Patient {} is tachycardic with HR of {} at {}" \
+                      .format(patient["patient_id"], patient["heart_rate"][-1][0],
+                              patient["heart_rate"][-1][2])
+            print(content)
+    subject = "Urgent Tachycardia Alert"
+    from_email = "ajm111@duke.edu"
+    email = {"from_email": from_email, "to_email": to_email, "subject": subject,
+             "content": content}
     email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
-    r = requests.post(email_server, json=new_hr)
-    print(r.status_code)
-    print(r.text)
+    # r = requests.post(email_server, json=new_hr)
+    # print(r.status_code)
+    # print(r.text)
 
 
 if __name__ == "__main__":

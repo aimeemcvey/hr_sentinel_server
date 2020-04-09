@@ -113,7 +113,7 @@ def add_hr_to_db(in_dict):
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             # patient["heart_rate"].append(in_dict["heart_rate"])
-            patient["hr"] = in_dict["heart_rate"]
+            patient["latest_hr"] = in_dict["heart_rate"]
             return True
     return False
 
@@ -121,12 +121,7 @@ def add_hr_to_db(in_dict):
 def is_tachycardic(in_dict):
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            # problem here
-            # print(len(patient["heart_rate"]))
-            # for i in patient["heart_rate"][::3]:
-            #     hr = i
-            #     print(i)
-            hr = patient["hr"]
+            hr = patient["latest_hr"]
             if (1 <= patient["patient_age"] < 3 and hr > 151) \
                     or (3 <= patient["patient_age"] < 5 and hr > 137) \
                     or (5 <= patient["patient_age"] < 8 and hr > 133) \

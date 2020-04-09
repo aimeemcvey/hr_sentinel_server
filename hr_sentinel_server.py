@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request
 import logging
 from datetime import datetime
+import requests
 
 logging.basicConfig(filename="hr_sentinel_server_info.log", filemode="w",
                     level=logging.INFO)
@@ -156,15 +157,15 @@ def email_physician(in_dict):
             content = "Patient {} is tachycardic with HR of {} at {}" \
                       .format(patient["patient_id"], patient["heart_rate"][-1][0],
                               patient["heart_rate"][-1][2])
-            print(content)
     subject = "Urgent Tachycardia Alert"
     from_email = "ajm111@duke.edu"
     email = {"from_email": from_email, "to_email": to_email, "subject": subject,
              "content": content}
+    print(email)
     email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
-    # r = requests.post(email_server, json=new_hr)
-    # print(r.status_code)
-    # print(r.text)
+    r = requests.post(email_server, json=email)
+    print(r.status_code)
+    print(r.text)
 
 
 if __name__ == "__main__":

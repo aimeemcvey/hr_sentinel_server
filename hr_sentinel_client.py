@@ -5,8 +5,8 @@ server_name = "http://127.0.0.1:5000"
 
 
 def add_patients():
-    new_p = {"patient_id": 1, "attending_email": "dr@duke.edu",
-             "patient_age": 45}
+    new_p = {"patient_id": 3, "attending_email": "dr@duke.edu",
+             "patient_age": 14}
     r = requests.post(server_name+"/api/new_patient", json=new_p)
     if r.status_code != 200:
         print("Error: {} - {}".format(r.status_code, r.text))
@@ -15,7 +15,7 @@ def add_patients():
 
 
 def add_hr():
-    new_hr = {"patient_id": 1, "heart_rate": 101}
+    new_hr = {"patient_id": 3, "heart_rate": 80}
     r = requests.post(server_name+"/api/heart_rate", json=new_hr)
     print(r.status_code)
     print(r.text)

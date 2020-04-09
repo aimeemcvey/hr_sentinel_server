@@ -73,6 +73,8 @@ def post_heart_rate():
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
     add_hr = add_hr_to_db(in_dict)
+    tach = is_tachycardic(in_dict)
+    add_tach_to_db(in_dict, tach)
     if add_hr:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
@@ -106,14 +108,42 @@ def is_patient_in_database(id):
 
 def add_hr_to_db(in_dict):
     # identify patient
-    # store hr measurement in their record
-    # store datetime
+    # store hr measurement, dt, tach in their record
     # if tachycardic, send email
-    dt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"].append((in_dict["heart_rate"], dt))
-            print("db is {}" .format(patient_db))
+            patient["latest_hr"] = in_dict["heart_rate"]
+            return True
+    return False
+
+
+def is_tachycardic(in_dict):
+    print("in_dict is {}" .format(in_dict))
+    for patient in patient_db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            hr = patient["latest_hr"]
+            if (1 <= patient["patient_age"] < 3 and hr > 151) \
+                    or (3 <= patient["patient_age"] < 5 and hr > 137) \
+                    or (5 <= patient["patient_age"] < 8 and hr > 133) \
+                    or (8 <= patient["patient_age"] < 12 and hr > 130) \
+                    or (12 <= patient["patient_age"] < 15 and hr > 119) \
+                    or (patient["patient_age"] >= 15 and hr > 100):
+                return True
+            else:
+                return False
+
+
+def add_tach_to_db(in_dict, tach):
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if tach:
+        status = "tachycardic"
+    elif not tach:
+        status = "not tachycardic"
+    for patient in patient_db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            patient["heart_rate"].append((in_dict["heart_rate"],
+                                          status, timestamp))
+            print("db is {}".format(patient_db))
             return True
     return False
 

@@ -76,7 +76,8 @@ def post_heart_rate():
     tach = is_tachycardic(in_dict)
     add_tach_to_db(in_dict, tach)
     if tach:
-        email_physician(in_dict)
+        email = compose_email(in_dict)
+        email_physician(email)
     if add_tach_to_db:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
@@ -146,7 +147,7 @@ def add_tach_to_db(in_dict, tach):
     return False
 
 
-def email_physician(in_dict):
+def compose_email(in_dict):
     # if tachycardic, send email
     # patient_id, the tachycardic heart rate, and dt stamp
     for patient in patient_db:
@@ -159,6 +160,10 @@ def email_physician(in_dict):
     from_email = "ajm111@duke.edu"
     email = {"from_email": from_email, "to_email": to_email, "subject": subject,
              "content": content}
+    return email
+
+
+def email_physician(email):
     email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
     r = requests.post(email_server, json=email)
     if r.status_code != 200:

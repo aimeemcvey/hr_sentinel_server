@@ -72,12 +72,14 @@ def post_heart_rate():
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
-    add_hr = add_hr_to_db(in_dict)
+    add_hr_to_db(in_dict)
     tach = is_tachycardic(in_dict)
     add_tach_to_db(in_dict, tach)
-    if add_hr:
+    if add_tach_to_db:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
+    if tach:
+        email_physician(in_dict)
     # else:
     #     return "Unknown problem", 400
 
@@ -107,9 +109,6 @@ def is_patient_in_database(id):
 
 
 def add_hr_to_db(in_dict):
-    # identify patient
-    # store hr measurement, dt, tach in their record
-    # if tachycardic, send email
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             patient["latest_hr"] = in_dict["heart_rate"]
@@ -146,6 +145,15 @@ def add_tach_to_db(in_dict, tach):
             print("db is {}".format(patient_db))
             return True
     return False
+
+
+def email_physician(in_dict):
+    # if tachycardic, send email
+    message = {"patient_id": 3, "heart_rate": 80}
+    email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
+    r = requests.post(email_server, json=new_hr)
+    print(r.status_code)
+    print(r.text)
 
 
 if __name__ == "__main__":

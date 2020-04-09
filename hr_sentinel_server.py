@@ -112,7 +112,8 @@ def add_hr_to_db(in_dict):
     # if tachycardic, send email
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"].append(in_dict["heart_rate"])
+            # patient["heart_rate"].append(in_dict["heart_rate"])
+            patient["hr"] = in_dict["heart_rate"]
             return True
     return False
 
@@ -121,7 +122,11 @@ def is_tachycardic(in_dict):
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             # problem here
-            hr = patient["heart_rate"][0]
+            # print(len(patient["heart_rate"]))
+            # for i in patient["heart_rate"][::3]:
+            #     hr = i
+            #     print(i)
+            hr = patient["hr"]
             if (1 <= patient["patient_age"] < 3 and hr > 151) \
                     or (3 <= patient["patient_age"] < 5 and hr > 137) \
                     or (5 <= patient["patient_age"] < 8 and hr > 133) \
@@ -141,8 +146,9 @@ def add_tach_to_db(in_dict, tach):
         status = "not tachycardic"
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"].append(status)
-            patient["heart_rate"].append(timestamp)
+            patient["heart_rate"].append((in_dict["heart_rate"], status, timestamp))
+            # patient["heart_rate"].append(status)
+            # patient["heart_rate"].append(timestamp)
             print("db is {}".format(patient_db))
             return True
     return False

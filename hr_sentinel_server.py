@@ -118,6 +118,7 @@ def add_hr_to_db(in_dict):
 
 
 def is_tachycardic(in_dict):
+    print("in_dict is {}" .format(in_dict))
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             hr = patient["latest_hr"]

@@ -107,3 +107,17 @@ def test_add_hr_to_db():
     answer = add_hr_to_db(in_dict)
     expected = True
     assert answer == expected
+
+
+@pytest.mark.parametrize("in_dict, expected", [
+    ({"patient_id": 5, "heart_rate": 120}, True),
+    ({"patient_id": 5, "heart_rate": 100}, False),
+])
+def test_is_tachycardic(in_dict, expected):
+    from hr_sentinel_server import add_patient_to_db
+    from hr_sentinel_server import add_hr_to_db
+    from hr_sentinel_server import is_tachycardic
+    add_patient_to_db(5, "srszn@jokes.com", 12)
+    add_hr_to_db(in_dict)
+    answer = is_tachycardic(in_dict)
+    assert answer == expected

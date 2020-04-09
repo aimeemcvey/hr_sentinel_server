@@ -22,5 +22,5 @@ def add_hr():
 
 
 if __name__ == "__main__":
-    # add_patients()
+    add_patients()
     add_hr()

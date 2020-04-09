@@ -112,7 +112,6 @@ def add_hr_to_db(in_dict):
     # if tachycardic, send email
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            # patient["heart_rate"].append(in_dict["heart_rate"])
             patient["latest_hr"] = in_dict["heart_rate"]
             return True
     return False
@@ -141,9 +140,8 @@ def add_tach_to_db(in_dict, tach):
         status = "not tachycardic"
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
-            patient["heart_rate"].append((in_dict["heart_rate"], status, timestamp))
-            # patient["heart_rate"].append(status)
-            # patient["heart_rate"].append(timestamp)
+            patient["heart_rate"].append((in_dict["heart_rate"],
+                                          status, timestamp))
             print("db is {}".format(patient_db))
             return True
     return False

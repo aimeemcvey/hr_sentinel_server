@@ -150,6 +150,7 @@ def add_tach_to_db(in_dict, tach):
 def compose_email(in_dict):
     # if tachycardic, send email
     # patient_id, the tachycardic heart rate, and dt stamp
+    print(in_dict)
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             to_email = patient["attending_email"]
@@ -160,6 +161,7 @@ def compose_email(in_dict):
     from_email = "ajm111@duke.edu"
     email = {"from_email": from_email, "to_email": to_email, "subject": subject,
              "content": content}
+    print(email)
     return email
 
 

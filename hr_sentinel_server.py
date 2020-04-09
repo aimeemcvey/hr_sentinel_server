@@ -36,7 +36,6 @@ def add_patient_to_db(id, email, age):
     patient_db.append(new_patient)
     logging.info("New patient added to database: ID={}"
                  .format(new_patient["patient_id"]))
-    print("db is {}".format(patient_db))
     return new_patient
 
 
@@ -118,7 +117,6 @@ def add_hr_to_db(in_dict):
 
 
 def is_tachycardic(in_dict):
-    print("in_dict is {}" .format(in_dict))
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             hr = patient["latest_hr"]
@@ -161,11 +159,12 @@ def email_physician(in_dict):
     from_email = "ajm111@duke.edu"
     email = {"from_email": from_email, "to_email": to_email, "subject": subject,
              "content": content}
-    print(email)
     email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
     r = requests.post(email_server, json=email)
-    print(r.status_code)
-    print(r.text)
+    if r.status_code != 200:
+        print("Error: {} - {}".format(r.status_code, r.text))
+    else:
+        print("Success: {}".format(r.text))
 
 
 if __name__ == "__main__":

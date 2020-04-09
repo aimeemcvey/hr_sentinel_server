@@ -144,6 +144,8 @@ def test_compose_email():
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     answer = compose_email(in_dict)
     expected = {'from_email': 'ajm111@duke.edu', 'to_email':
-                'livelaughlove@hotmail.com', 'subject': 'Urgent Tachycardia Alert',
-                'content': 'Patient 7 is tachycardic with HR of 130 at {}'.format(timestamp)}
+                'livelaughlove@hotmail.com', 'subject':
+                    'Urgent Tachycardia Alert', 'content':
+                    'Patient 7 is tachycardic with HR of 130 at {}'
+                        .format(timestamp)}
     assert answer == expected

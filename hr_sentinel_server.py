@@ -155,12 +155,12 @@ def compose_email(in_dict):
         if patient["patient_id"] == in_dict["patient_id"]:
             to_email = patient["attending_email"]
             content = "Patient {} is tachycardic with HR of {} at {}" \
-                      .format(patient["patient_id"], patient["heart_rate"][-1][0],
-                              patient["heart_rate"][-1][2])
+                .format(patient["patient_id"], patient["heart_rate"][-1][0],
+                        patient["heart_rate"][-1][2])
     subject = "Urgent Tachycardia Alert"
     from_email = "ajm111@duke.edu"
-    email = {"from_email": from_email, "to_email": to_email, "subject": subject,
-             "content": content}
+    email = {"from_email": from_email, "to_email": to_email,
+             "subject": subject, "content": content}
     print(email)
     return email
 

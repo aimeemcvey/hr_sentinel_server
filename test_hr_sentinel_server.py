@@ -173,9 +173,31 @@ def test_generate_latest_hr(patient_id, expected):
     from hr_sentinel_server import generate_latest_hr
     from hr_sentinel_server import add_patient_to_db
     patient = add_patient_to_db(28594, "drdeath@hurt.com", 85)
-    patient["heart_rate"].append((83, 'not tachycardic', '2020-04-11 00:00:01'))
-    patient["heart_rate"].append((85, 'not tachycardic', '2020-04-11 00:00:50'))
-    patient["heart_rate"].append((93, 'not tachycardic', '2020-04-11 00:00:54'))
+    patient["heart_rate"].append((83, 'not tachycardic',
+                                  '2020-04-11 00:00:01'))
+    patient["heart_rate"].append((85, 'not tachycardic',
+                                  '2020-04-11 00:00:50'))
+    patient["heart_rate"].append((93, 'not tachycardic',
+                                  '2020-04-11 00:00:54'))
     add_patient_to_db(34857, "drdeath@hurt.com", 35)
     answer = generate_latest_hr(patient_id)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (19283, [56, 64, 61]),
+    (13857, "No heart rates in database")
+])
+def test_generate_all_hr(patient_id, expected):
+    from hr_sentinel_server import generate_all_hr
+    from hr_sentinel_server import add_patient_to_db
+    patient = add_patient_to_db(19283, "drjones@med.com", 46)
+    patient["heart_rate"].append((56, 'not tachycardic',
+                                  '2020-04-11 14:00:01'))
+    patient["heart_rate"].append((64, 'not tachycardic',
+                                  '2020-04-11 14:01:50'))
+    patient["heart_rate"].append((61, 'not tachycardic',
+                                  '2020-04-11 14:03:54'))
+    add_patient_to_db(13857, "drjones@med.com", 23)
+    answer = generate_all_hr(patient_id)
     assert answer == expected

@@ -267,6 +267,9 @@ def post_heart_rate_interval_avg():
     # check HRs exist
     # check HRs since given time
     # calculate HR average since given time
+    hr_list = generate_select_hr(in_dict["patient_id"],
+                                 in_dict["heart_rate_average_since"])
+    # generate_avg_hr(hr_list)
     # return HR average
 
 
@@ -285,6 +288,20 @@ def verify_interval_info(in_dict):
             else:
                 return "{} value not correct type".format(key)
     return True
+
+
+def generate_select_hr(patient_id, sent_time):
+    for patient in patient_db:
+        if patient["patient_id"] == patient_id:
+            if len(patient["heart_rate"]) == 0:
+                return "No heart rates in database"
+            select_hr = []
+            for hr in patient["heart_rate"]:  # gives all HRs
+                if sent_time > hr[2]:
+                    select_hr.append(hr[0])
+            print(select_hr)
+            return select_hr
+    return False
 
 
 if __name__ == "__main__":

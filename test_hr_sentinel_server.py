@@ -158,8 +158,27 @@ def test_compose_email():
 ])
 def test_verify_id_input(patient_id, expected):
     from hr_sentinel_server import add_patient_to_db
-    from hr_sentinel_server import is_patient_in_database
     from hr_sentinel_server import verify_id_input
     add_patient_to_db(584393, "drdeath@hurt.com", 27)
     answer = verify_id_input(patient_id)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (28594, {"heart_rate": 93,
+             "status": "not tachycardic",
+             "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')}),
+    (34857, "No heart rates in database")
+])
+def test_generate_latest_hr(patient_id, expected):
+    from hr_sentinel_server import add_patient_to_db
+    from hr_sentinel_server import add_tach_to_db
+    from hr_sentinel_server import generate_latest_hr
+    add_patient_to_db(28594, "drdeath@hurt.com", 85)
+    in_dict = {"patient_id": 28594, "heart_rate": 83}
+    add_tach_to_db(in_dict, False)
+    in_dict = {"patient_id": 28594, "heart_rate": 93}
+    add_tach_to_db(in_dict, False)
+    add_patient_to_db(34857, "drdeath@hurt.com", 35)
+    answer = generate_latest_hr(patient_id)
     assert answer == expected

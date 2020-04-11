@@ -30,7 +30,7 @@ def get_results():
 
 
 def get_hr_interval_avg():
-    hr_interval = {"patient_id": 2, "heart_rate_average_since": "2020-04-11 18:30:36"}
+    hr_interval = {"patient_id": 2, "heart_rate_average_since": "2020-04-11 19:30:36"}
     r = requests.post(server_name+"/api/heart_rate/interval_average", json=hr_interval)
     print(r.status_code)
     print(r.text)

@@ -299,7 +299,7 @@ def generate_select_hr(patient_id, sent_time):
                 return "No heart rates in database"
             select_hr = []
             for hr in patient["heart_rate"]:
-                if hr[2] > sent_time:
+                if hr[2] >= sent_time:
                     select_hr.append(hr[0])
             if len(select_hr) == 0:
                 return "No heart rates in database since {}".format(sent_time)

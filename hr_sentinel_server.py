@@ -174,6 +174,18 @@ def email_physician(email):
         print("Success: {}".format(r.text))
 
 
+@app.route("/api/status/<patient_id>", methods=["GET"])
+def get_latest_hr(patient_id):
+    check_result = verify_get_latest_hr_input(patient_id)
+    if type(check_result) is str:
+        return check_result, 400
+    answer = generate_latest_hr(check_result)
+    if answer is False:
+        return "Unknown Error", 400
+    else:
+        return answer, 200
+
+
 if __name__ == "__main__":
     # init_database()
     app.run()

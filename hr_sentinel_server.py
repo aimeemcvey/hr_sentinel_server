@@ -264,14 +264,15 @@ def post_heart_rate_interval_avg():
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
-    # check HRs exist
-    # check HRs since given time
-    # calculate HR average since given time
     hr_list = generate_select_hr(in_dict["patient_id"],
                                  in_dict["heart_rate_average_since"])
-    # generate_avg_hr(hr_list)
-    # return HR average
-    return jsonify(hr_list), 200
+    if hr_list is False:
+        return "Unknown Error", 400
+    elif type(hr_list) is str:
+        return hr_list, 400
+    else:
+        avg_hr = generate_avg_hr(hr_list)
+        return jsonify(avg_hr), 200
 
 
 def verify_interval_info(in_dict):
@@ -297,13 +298,13 @@ def generate_select_hr(patient_id, sent_time):
             if len(patient["heart_rate"]) == 0:
                 return "No heart rates in database"
             select_hr = []
-            print(sent_time)
-            for hr in patient["heart_rate"]:  # gives all HRs
-                print(hr[2])
+            for hr in patient["heart_rate"]:
                 if hr[2] > sent_time:
                     select_hr.append(hr[0])
-            print(select_hr)
-            return select_hr
+            if len(select_hr) == 0:
+                return "No heart rates in database since {}".format(sent_time)
+            else:
+                return select_hr
     return False
 
 

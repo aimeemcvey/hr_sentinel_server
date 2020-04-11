@@ -185,7 +185,7 @@ def test_generate_latest_hr(patient_id, expected):
 
 
 @pytest.mark.parametrize("patient_id, expected", [
-    (19283, [56, 64, 61]),
+    (19283, [56, 64, 111]),
     (13857, "No heart rates in database")
 ])
 def test_generate_all_hr(patient_id, expected):
@@ -196,7 +196,7 @@ def test_generate_all_hr(patient_id, expected):
                                   '2020-04-11 14:00:01'))
     patient["heart_rate"].append((64, 'not tachycardic',
                                   '2020-04-11 14:01:50'))
-    patient["heart_rate"].append((61, 'not tachycardic',
+    patient["heart_rate"].append((111, 'tachycardic',
                                   '2020-04-11 14:03:54'))
     add_patient_to_db(13857, "drjones@med.com", 23)
     answer = generate_all_hr(patient_id)

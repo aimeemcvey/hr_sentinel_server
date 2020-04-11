@@ -182,6 +182,8 @@ def get_latest_hr(patient_id):
     answer = generate_latest_hr(check_result)
     if answer is False:
         return "Unknown Error", 400
+    elif type(answer) is str:
+        return answer, 400
     else:
         return answer, 200
 
@@ -204,6 +206,7 @@ def generate_latest_hr(patient_id):
             out_latest_hr = {"heart_rate": patient["heart_rate"][-1][0],
                              "status": patient["heart_rate"][-1][1],
                              "timestamp": patient["heart_rate"][-1][2]}
+            print(out_latest_hr)
             return out_latest_hr
     return False
 

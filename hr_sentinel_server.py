@@ -188,6 +188,20 @@ def get_latest_hr(patient_id):
         return answer, 200
 
 
+@app.route("/api/heart_rate/<patient_id>", methods=["GET"])
+def get_all_hr(patient_id):
+    check_result = verify_id_input(patient_id)
+    if type(check_result) is str:
+        return check_result, 400
+    answer = generate_all_hr(check_result)
+    if answer is False:
+        return "Unknown Error", 400
+    elif type(answer) is str:
+        return answer, 400
+    else:
+        return answer, 200
+
+
 def verify_id_input(patient_id):
     try:
         id = int(patient_id)

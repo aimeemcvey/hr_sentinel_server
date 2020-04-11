@@ -255,6 +255,28 @@ def generate_avg_hr(hr_list):
     return avg_hr
 
 
+@app.route("/api/heart_rate/interval_average", methods=["POST"])
+def post_heart_rate_interval_avg():
+    """
+    Receive the posting JSON
+    Verify the JSON contains correct keys and data
+    If data is bad, reject request with bad status to client
+    If data is good, calc HR average
+    return good status to client
+    """
+    in_dict = request.get_json()
+    check_result = verify_interval_info(in_dict)
+    if check_result is not True:
+        return check_result, 400
+    if is_patient_in_database(in_dict["patient_id"]) is False:
+        return "Patient {} is not found on server" \
+                   .format(in_dict["patient_id"]), 400
+    # check HRs exist
+    # check HRs since given time
+    # calculate HR average since given time
+    # return HR average
+
+
 if __name__ == "__main__":
     # init_database()
     app.run()

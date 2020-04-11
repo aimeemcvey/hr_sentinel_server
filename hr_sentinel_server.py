@@ -257,13 +257,6 @@ def generate_avg_hr(hr_list):
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
 def post_heart_rate_interval_avg():
-    """
-    Receive the posting JSON
-    Verify the JSON contains correct keys and data
-    If data is bad, reject request with bad status to client
-    If data is good, calc HR average
-    return good status to client
-    """
     in_dict = request.get_json()
     check_result = verify_interval_info(in_dict)
     if check_result is not True:
@@ -275,6 +268,23 @@ def post_heart_rate_interval_avg():
     # check HRs since given time
     # calculate HR average since given time
     # return HR average
+
+
+def verify_interval_info(in_dict):
+    expected_keys = ("patient_id", "heart_rate_average_since")
+    expected_types = (int, str)
+    for i, key in enumerate(expected_keys):
+        if key not in in_dict.keys():
+            return "{} key not found".format(key)
+        if type(in_dict[key]) is not expected_types[i]:
+            if key == "patient_id":
+                try:
+                    in_dict[key] = int(in_dict[key])
+                except ValueError:
+                    return "{} value not correct type".format(key)
+            else:
+                return "{} value not correct type".format(key)
+    return True
 
 
 if __name__ == "__main__":

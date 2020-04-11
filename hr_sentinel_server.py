@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 import logging
 from datetime import datetime
 import requests
+import statistics
 
 logging.basicConfig(filename="hr_sentinel_server_info.log", filemode="w",
                     level=logging.INFO)
@@ -205,13 +206,14 @@ def get_avg_hr(patient_id):
     check_result = verify_id_input(patient_id)
     if type(check_result) is str:
         return check_result, 400
-    answer = generate_avg_hr(check_result)
-    if answer is False:
+    hr_list = generate_all_hr(check_result)
+    if hr_list is False:
         return "Unknown Error", 400
-    elif type(answer) is str:
-        return answer, 400
+    elif type(hr_list) is str:
+        return hr_list, 400
     else:
-        return jsonify(answer), 200
+        avg_hr = generate_avg_hr(hr_list)
+        return jsonify(avg_hr), 200
 
 
 def verify_id_input(patient_id):
@@ -246,6 +248,11 @@ def generate_all_hr(patient_id):
                 all_hr.append(hr[0])
             return all_hr
     return False
+
+
+def generate_avg_hr(hr_list):
+    avg_hr = round(statistics.mean(hr_list))
+    return avg_hr
 
 
 if __name__ == "__main__":

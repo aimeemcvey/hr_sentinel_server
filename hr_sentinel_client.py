@@ -15,14 +15,14 @@ def add_patients():
 
 
 def add_hr():
-    new_hr = {"patient_id": 2, "heart_rate": 81}
+    new_hr = {"patient_id": 2, "heart_rate": 99}
     r = requests.post(server_name+"/api/heart_rate", json=new_hr)
     print(r.status_code)
     print(r.text)
 
 
 def get_results():
-    r = requests.get(server_name+"/api/heart_rate/3")
+    r = requests.get(server_name+"/api/heart_rate/average/2")
     if r.status_code != 200:
         print("Error {} - {}" .format(r.status_code, r.text))
     else:

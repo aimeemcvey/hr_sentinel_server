@@ -150,7 +150,6 @@ def add_tach_to_db(in_dict, tach):
 def compose_email(in_dict):
     # if tachycardic, send email
     # patient_id, the tachycardic heart rate, and dt stamp
-    print(in_dict)
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             to_email = patient["attending_email"]
@@ -161,7 +160,6 @@ def compose_email(in_dict):
     from_email = "ajm111@duke.edu"
     email = {"from_email": from_email, "to_email": to_email,
              "subject": subject, "content": content}
-    print(email)
     return email
 
 
@@ -199,7 +197,7 @@ def get_all_hr(patient_id):
     elif type(answer) is str:
         return answer, 400
     else:
-        return answer, 200
+        return jsonify(answer), 200
 
 
 def verify_id_input(patient_id):
@@ -220,8 +218,19 @@ def generate_latest_hr(patient_id):
             out_latest_hr = {"heart_rate": patient["heart_rate"][-1][0],
                              "status": patient["heart_rate"][-1][1],
                              "timestamp": patient["heart_rate"][-1][2]}
-            print(out_latest_hr)
             return out_latest_hr
+    return False
+
+
+def generate_all_hr(patient_id):
+    for patient in patient_db:
+        if patient["patient_id"] == patient_id:
+            if len(patient["heart_rate"]) == 0:
+                return "No heart rates in database"
+            all_hr = []
+            for hr in patient["heart_rate"]:
+                all_hr.append(hr[0])
+            return all_hr
     return False
 
 

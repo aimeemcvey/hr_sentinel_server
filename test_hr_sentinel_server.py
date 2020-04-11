@@ -149,3 +149,17 @@ def test_compose_email():
                     'Patient 7 is tachycardic with HR of 130 at {}'
                         .format(timestamp)}
     assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (584393, 584393),
+    ("six", "Bad patient ID in URL"),
+    ("8943", "Patient ID 8943 does not exist in database")
+])
+def test_verify_id_input(patient_id, expected):
+    from hr_sentinel_server import add_patient_to_db
+    from hr_sentinel_server import is_patient_in_database
+    from hr_sentinel_server import verify_id_input
+    add_patient_to_db(584393, "drdeath@hurt.com", 27)
+    answer = verify_id_input(patient_id)
+    assert answer == expected

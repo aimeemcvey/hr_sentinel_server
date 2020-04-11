@@ -1,5 +1,6 @@
 # test_hr_sentinel_server.py
 import pytest
+from datetime import datetime
 
 
 def test_add_patient_to_db():
@@ -125,13 +126,26 @@ def test_is_tachycardic(in_dict, expected):
 
 def test_add_tach_to_db():
     from hr_sentinel_server import add_patient_to_db
-    from hr_sentinel_server import add_hr_to_db
-    from hr_sentinel_server import is_tachycardic
     from hr_sentinel_server import add_tach_to_db
     add_patient_to_db(12, "gthcgth@duke.edu", 91)
     in_dict = {"patient_id": 12, "heart_rate": 75}
-    add_hr_to_db(in_dict)
-    tach = is_tachycardic(in_dict)
-    answer = add_tach_to_db(in_dict, tach)
+    answer = add_tach_to_db(in_dict, False)
     expected = True
+    assert answer == expected
+
+
+def test_compose_email():
+    from hr_sentinel_server import add_patient_to_db
+    from hr_sentinel_server import add_tach_to_db
+    from hr_sentinel_server import compose_email
+    add_patient_to_db(7, "livelaughlove@hotmail.com", 54)
+    in_dict = {"patient_id": 7, "heart_rate": 130}
+    add_tach_to_db(in_dict, True)
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    answer = compose_email(in_dict)
+    expected = {'from_email': 'ajm111@duke.edu', 'to_email':
+                'livelaughlove@hotmail.com', 'subject':
+                    'Urgent Tachycardia Alert', 'content':
+                    'Patient 7 is tachycardic with HR of 130 at {}'
+                        .format(timestamp)}
     assert answer == expected

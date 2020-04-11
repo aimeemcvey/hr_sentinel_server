@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request
 import logging
 from datetime import datetime
+import requests
 
 logging.basicConfig(filename="hr_sentinel_server_info.log", filemode="w",
                     level=logging.INFO)
@@ -35,7 +36,6 @@ def add_patient_to_db(id, email, age):
     patient_db.append(new_patient)
     logging.info("New patient added to database: ID={}"
                  .format(new_patient["patient_id"]))
-    print("db is {}".format(patient_db))
     return new_patient
 
 
@@ -72,10 +72,13 @@ def post_heart_rate():
     if is_patient_in_database(in_dict["patient_id"]) is False:
         return "Patient {} is not found on server" \
                    .format(in_dict["patient_id"]), 400
-    add_hr = add_hr_to_db(in_dict)
+    add_hr_to_db(in_dict)
     tach = is_tachycardic(in_dict)
     add_tach_to_db(in_dict, tach)
-    if add_hr:
+    if tach:
+        email = compose_email(in_dict)
+        email_physician(email)
+    if add_tach_to_db:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
     # else:
@@ -107,9 +110,6 @@ def is_patient_in_database(id):
 
 
 def add_hr_to_db(in_dict):
-    # identify patient
-    # store hr measurement, dt, tach in their record
-    # if tachycardic, send email
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             patient["latest_hr"] = in_dict["heart_rate"]
@@ -118,7 +118,6 @@ def add_hr_to_db(in_dict):
 
 
 def is_tachycardic(in_dict):
-    print("in_dict is {}" .format(in_dict))
     for patient in patient_db:
         if patient["patient_id"] == in_dict["patient_id"]:
             hr = patient["latest_hr"]
@@ -146,6 +145,33 @@ def add_tach_to_db(in_dict, tach):
             print("db is {}".format(patient_db))
             return True
     return False
+
+
+def compose_email(in_dict):
+    # if tachycardic, send email
+    # patient_id, the tachycardic heart rate, and dt stamp
+    print(in_dict)
+    for patient in patient_db:
+        if patient["patient_id"] == in_dict["patient_id"]:
+            to_email = patient["attending_email"]
+            content = "Patient {} is tachycardic with HR of {} at {}" \
+                .format(patient["patient_id"], patient["heart_rate"][-1][0],
+                        patient["heart_rate"][-1][2])
+    subject = "Urgent Tachycardia Alert"
+    from_email = "ajm111@duke.edu"
+    email = {"from_email": from_email, "to_email": to_email,
+             "subject": subject, "content": content}
+    print(email)
+    return email
+
+
+def email_physician(email):
+    email_server = "http://vcm-7631.vm.duke.edu:5007/hrss/send_email"
+    r = requests.post(email_server, json=email)
+    if r.status_code != 200:
+        print("Error: {} - {}".format(r.status_code, r.text))
+    else:
+        print("Success: {}".format(r.text))
 
 
 if __name__ == "__main__":

@@ -201,3 +201,14 @@ def test_generate_all_hr(patient_id, expected):
     add_patient_to_db(13857, "drjones@med.com", 23)
     answer = generate_all_hr(patient_id)
     assert answer == expected
+
+
+@pytest.mark.parametrize("hr_list, expected", [
+    ([56, 64, 111, 100, 94], 85),
+    ([100, 103, 105, 121], 107),
+    ([76, 84, 91, 81], 83)
+])
+def test_generate_avg_hr(hr_list, expected):
+    from hr_sentinel_server import generate_avg_hr
+    answer = generate_avg_hr(hr_list)
+    assert answer == expected

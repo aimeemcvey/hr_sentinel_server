@@ -192,8 +192,20 @@ def verify_get_latest_hr_input(patient_id):
     except ValueError:
         return "Bad patient ID in URL"
     if is_patient_in_database(id) is False:
-        return "Patient id {} does not exist in database" .format(id)
+        return "Patient ID {} does not exist in database".format(id)
     return id
+
+
+def generate_latest_hr(patient_id):
+    for patient in patient_db:
+        if patient["patient_id"] == patient_id:
+            if len(patient["heart_rate"]) == 0:
+                return "No heart rates in database"
+            out_latest_hr = {"heart_rate": patient["heart_rate"][-1][0],
+                             "status": patient["heart_rate"][-1][1],
+                             "timestamp": patient["heart_rate"][-1][2]}
+            return out_latest_hr
+    return False
 
 
 if __name__ == "__main__":

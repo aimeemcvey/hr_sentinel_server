@@ -186,6 +186,16 @@ def get_latest_hr(patient_id):
         return answer, 200
 
 
+def verify_get_latest_hr_input(patient_id):
+    try:
+        id = int(patient_id)
+    except ValueError:
+        return "Bad patient ID in URL"
+    if is_patient_in_database(id) is False:
+        return "Patient id {} does not exist in database" .format(id)
+    return id
+
+
 if __name__ == "__main__":
     # init_database()
     app.run()

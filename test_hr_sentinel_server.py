@@ -149,3 +149,66 @@ def test_compose_email():
                     'Patient 7 is tachycardic with HR of 130 at {}'
                         .format(timestamp)}
     assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (584393, 584393),
+    ("six", "Bad patient ID in URL"),
+    ("8943", "Patient ID 8943 does not exist in database")
+])
+def test_verify_id_input(patient_id, expected):
+    from hr_sentinel_server import add_patient_to_db
+    from hr_sentinel_server import verify_id_input
+    add_patient_to_db(584393, "drdeath@hurt.com", 27)
+    answer = verify_id_input(patient_id)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (28594, {"heart_rate": 93, "status": "not tachycardic",
+             "timestamp": '2020-04-11 00:00:54'}),
+    (34857, "No heart rates in database")
+])
+def test_generate_latest_hr(patient_id, expected):
+    from hr_sentinel_server import generate_latest_hr
+    from hr_sentinel_server import add_patient_to_db
+    patient = add_patient_to_db(28594, "drdeath@hurt.com", 85)
+    patient["heart_rate"].append((83, 'not tachycardic',
+                                  '2020-04-11 00:00:01'))
+    patient["heart_rate"].append((85, 'not tachycardic',
+                                  '2020-04-11 00:00:50'))
+    patient["heart_rate"].append((93, 'not tachycardic',
+                                  '2020-04-11 00:00:54'))
+    add_patient_to_db(34857, "drdeath@hurt.com", 35)
+    answer = generate_latest_hr(patient_id)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("patient_id, expected", [
+    (19283, [56, 64, 111]),
+    (13857, "No heart rates in database")
+])
+def test_generate_all_hr(patient_id, expected):
+    from hr_sentinel_server import generate_all_hr
+    from hr_sentinel_server import add_patient_to_db
+    patient = add_patient_to_db(19283, "drjones@med.com", 46)
+    patient["heart_rate"].append((56, 'not tachycardic',
+                                  '2020-04-11 14:00:01'))
+    patient["heart_rate"].append((64, 'not tachycardic',
+                                  '2020-04-11 14:01:50'))
+    patient["heart_rate"].append((111, 'tachycardic',
+                                  '2020-04-11 14:03:54'))
+    add_patient_to_db(13857, "drjones@med.com", 23)
+    answer = generate_all_hr(patient_id)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("hr_list, expected", [
+    ([56, 64, 111, 100, 94], 85),
+    ([100, 103, 105, 121], 107),
+    ([76, 84, 91, 81], 83)
+])
+def test_generate_avg_hr(hr_list, expected):
+    from hr_sentinel_server import generate_avg_hr
+    answer = generate_avg_hr(hr_list)
+    assert answer == expected

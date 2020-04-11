@@ -165,20 +165,17 @@ def test_verify_id_input(patient_id, expected):
 
 
 @pytest.mark.parametrize("patient_id, expected", [
-    (28594, {"heart_rate": 93,
-             "status": "not tachycardic",
-             "timestamp": datetime.now().strftime('%Y-%m-%d %H:%M:%S')}),
+    (28594, {"heart_rate": 93, "status": "not tachycardic",
+             "timestamp": '2020-04-11 00:00:54'}),
     (34857, "No heart rates in database")
 ])
 def test_generate_latest_hr(patient_id, expected):
-    from hr_sentinel_server import add_patient_to_db
-    from hr_sentinel_server import add_tach_to_db
     from hr_sentinel_server import generate_latest_hr
-    add_patient_to_db(28594, "drdeath@hurt.com", 85)
-    in_dict = {"patient_id": 28594, "heart_rate": 83}
-    add_tach_to_db(in_dict, False)
-    in_dict = {"patient_id": 28594, "heart_rate": 93}
-    add_tach_to_db(in_dict, False)
+    from hr_sentinel_server import add_patient_to_db
+    patient = add_patient_to_db(28594, "drdeath@hurt.com", 85)
+    patient["heart_rate"].append((83, 'not tachycardic', '2020-04-11 00:00:01'))
+    patient["heart_rate"].append((85, 'not tachycardic', '2020-04-11 00:00:50'))
+    patient["heart_rate"].append((93, 'not tachycardic', '2020-04-11 00:00:54'))
     add_patient_to_db(34857, "drdeath@hurt.com", 35)
     answer = generate_latest_hr(patient_id)
     assert answer == expected

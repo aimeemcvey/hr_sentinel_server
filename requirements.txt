@@ -3,3 +3,4 @@ flask
 pytest
 pytest-pep8
 datetime
+sphinx

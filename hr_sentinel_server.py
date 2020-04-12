@@ -32,6 +32,9 @@ def post_new_patient():
     check_result = verify_new_patient_info(in_dict)
     if check_result is not True:
         return check_result, 400
+    if is_patient_in_database(in_dict["patient_id"]) is True:
+        return "Patient {} has already been added to server" \
+                   .format(in_dict["patient_id"]), 400
     add_patient_to_db(in_dict["patient_id"], in_dict["attending_email"],
                       in_dict["patient_age"])
     return "Patient added", 200

@@ -40,6 +40,6 @@ def get_hr_interval_avg():
 
 if __name__ == "__main__":
     add_patients()
-    add_hr()
+    # add_hr()
     # get_results()
     # get_hr_interval_avg()

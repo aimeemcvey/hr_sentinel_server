@@ -212,3 +212,17 @@ def test_generate_avg_hr(hr_list, expected):
     from hr_sentinel_server import generate_avg_hr
     answer = generate_avg_hr(hr_list)
     assert answer == expected
+
+
+@pytest.mark.parametrize("in_dict, expected", [
+    ({"patient_id": "12847", "heart_rate_average_since": "2020-04-11 19:30:36"},
+     True),
+    ({"patiet_id": 12847, "heart_rate_average_since": "2020-04-11 19:30:36"},
+     "patient_id key not found"),
+    ({"patient_id": 12847, "heart_rate_average_since": 2020},
+     "heart_rate_average_since value not correct type")
+])
+def test_verify_interval_info(in_dict, expected):
+    from hr_sentinel_server import verify_interval_info
+    answer = verify_interval_info(in_dict)
+    assert answer == expected

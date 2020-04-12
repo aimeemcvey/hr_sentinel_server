@@ -212,3 +212,38 @@ def test_generate_avg_hr(hr_list, expected):
     from hr_sentinel_server import generate_avg_hr
     answer = generate_avg_hr(hr_list)
     assert answer == expected
+
+
+@pytest.mark.parametrize("in_dict, expected", [
+    ({"patient_id": "12847", "heart_rate_average_since":
+        "2020-04-11 19:30:36"}, True),
+    ({"patiet_id": 12847, "heart_rate_average_since": "2020-04-11 19:30:36"},
+     "patient_id key not found"),
+    ({"patient_id": 12847, "heart_rate_average_since": 2020},
+     "heart_rate_average_since value not correct type")
+])
+def test_verify_interval_info(in_dict, expected):
+    from hr_sentinel_server import verify_interval_info
+    answer = verify_interval_info(in_dict)
+    assert answer == expected
+
+
+@pytest.mark.parametrize("input, expected", [
+    ((19283, '2020-04-11 14:01:10'), [64, 111]),
+    ((19283, '2020-04-11 14:04:10'),
+     "No heart rates in database since 2020-04-11 14:04:10"),
+    ((13857, '2020-04-11 14:00:01'), "No heart rates in database")
+])
+def test_generate_select_hr(input, expected):
+    from hr_sentinel_server import generate_select_hr
+    from hr_sentinel_server import add_patient_to_db
+    patient = add_patient_to_db(19283, "drjones@med.com", 46)
+    patient["heart_rate"].append((56, 'not tachycardic',
+                                  '2020-04-11 14:00:01'))
+    patient["heart_rate"].append((64, 'not tachycardic',
+                                  '2020-04-11 14:01:50'))
+    patient["heart_rate"].append((111, 'tachycardic',
+                                  '2020-04-11 14:03:54'))
+    add_patient_to_db(13857, "drjones@med.com", 23)
+    answer = generate_select_hr(input[0], input[1])
+    assert answer == expected

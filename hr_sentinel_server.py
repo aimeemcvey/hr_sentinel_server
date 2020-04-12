@@ -255,6 +255,59 @@ def generate_avg_hr(hr_list):
     return avg_hr
 
 
+@app.route("/api/heart_rate/interval_average", methods=["POST"])
+def post_heart_rate_interval_avg():
+    in_dict = request.get_json()
+    check_result = verify_interval_info(in_dict)
+    if check_result is not True:
+        return check_result, 400
+    if is_patient_in_database(in_dict["patient_id"]) is False:
+        return "Patient {} is not found on server" \
+                   .format(in_dict["patient_id"]), 400
+    hr_list = generate_select_hr(in_dict["patient_id"],
+                                 in_dict["heart_rate_average_since"])
+    if hr_list is False:
+        return "Unknown Error", 400
+    elif type(hr_list) is str:
+        return hr_list, 400
+    else:
+        avg_hr = generate_avg_hr(hr_list)
+        return jsonify(avg_hr), 200
+
+
+def verify_interval_info(in_dict):
+    expected_keys = ("patient_id", "heart_rate_average_since")
+    expected_types = (int, str)
+    for i, key in enumerate(expected_keys):
+        if key not in in_dict.keys():
+            return "{} key not found".format(key)
+        if type(in_dict[key]) is not expected_types[i]:
+            if key == "patient_id":
+                try:
+                    in_dict[key] = int(in_dict[key])
+                except ValueError:
+                    return "{} value not correct type".format(key)
+            else:
+                return "{} value not correct type".format(key)
+    return True
+
+
+def generate_select_hr(patient_id, sent_time):
+    for patient in patient_db:
+        if patient["patient_id"] == patient_id:
+            if len(patient["heart_rate"]) == 0:
+                return "No heart rates in database"
+            select_hr = []
+            for hr in patient["heart_rate"]:
+                if hr[2] >= sent_time:
+                    select_hr.append(hr[0])
+            if len(select_hr) == 0:
+                return "No heart rates in database since {}".format(sent_time)
+            else:
+                return select_hr
+    return False
+
+
 if __name__ == "__main__":
     # init_database()
     app.run()

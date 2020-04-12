@@ -15,7 +15,7 @@ def add_patients():
 
 
 def add_hr():
-    new_hr = {"patient_id": 2, "heart_rate": 60}
+    new_hr = {"patient_id": 2, "heart_rate": 120}
     r = requests.post(server_name + "/api/heart_rate", json=new_hr)
     print(r.status_code)
     print(r.text)

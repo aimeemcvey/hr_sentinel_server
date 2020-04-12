@@ -79,11 +79,15 @@ def post_heart_rate():
     if tach:
         email = compose_email(in_dict)
         email_physician(email)
+        logging.info("Tachycardic heart rate of {} detected from patient ID {} "
+                     "with attending email {}"
+                     .format(in_dict["heart_rate"], in_dict["patient_id"],
+                             email["to_email"]))
     if add_tach_to_db:
         return "Heart rate added to patient ID {}" \
                    .format(in_dict["patient_id"]), 200
-    # else:
-    #     return "Unknown problem", 400
+    else:
+        return "Unknown problem", 400
 
 
 def verify_heart_rate_info(in_dict):

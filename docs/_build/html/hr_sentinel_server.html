@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>hr_sentinel_server module &#8212; hr_sentinel_server 1.0.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to hr_sentinel_server’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-hr_sentinel_server">
+<span id="hr-sentinel-server-module"></span><h1>hr_sentinel_server module<a class="headerlink" href="#module-hr_sentinel_server" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="hr_sentinel_server.add_hr_to_db">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">add_hr_to_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.add_hr_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds heart rate to latest_hr key in patient database</p>
+<p>The heart rate must be affiliated with the correct
+patient ID in the database before it is checked for
+tachycardia.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and heart rate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if heart rate added to patient database, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.add_patient_to_db">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">add_patient_to_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">email</span></em>, <em class="sig-param"><span class="n">age</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.add_patient_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new patient to patient database list via ID</p>
+<p>The patient ID, attending physician email, and patient age
+are added to the patient database to maintain proper records
+of monitored patient heart rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>int</em>) – patient ID</p></li>
+<li><p><strong>email</strong> (<em>str</em>) – attending physician email</p></li>
+<li><p><strong>age</strong> (<em>int</em>) – patient age</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>new patient information</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.add_tach_to_db">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">add_tach_to_db</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em>, <em class="sig-param"><span class="n">tach</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.add_tach_to_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds heart rate, status, and timestamp to patient info</p>
+<p>The heart rate is affiliated with status of tachycardia
+and the timestamp it was taken for proper record keeping
+and to trigger further action from the attending physician
+if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and heart rate</p></li>
+<li><p><strong>tach</strong> (<em>bool</em>) – True if latest heart rate indicates tachycardia</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if heart rate, status, and timestamp added, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.compose_email">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">compose_email</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.compose_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Composes email to send to attending if tachycardic</p>
+<p>If the patient is exhibiting symptoms of tachycardia,
+ie an increased heart rate, further action from the
+physician might be necessary. As such, the physician
+must be notified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and heart rate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>email to be sent to the physician</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.email_physician">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">email_physician</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">email</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.email_physician" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends email to physician with patient details</p>
+<p>The attending physician must be alerted and provided
+with the relevant patient information in order to take
+action regarding tachycardia symptoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>email</strong> (<em>dict</em>) – email to be sent to physician</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>message regarding send status of email</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.generate_all_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">generate_all_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.generate_all_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates list of all recorded heart rates for patient</p>
+<p>The series of heart rates can be used to monitor changing
+health status over time and allow the physician to make
+corresponding treatment decisions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if no heart rates stored for that patient
+list: all heart rates recorded from the patient</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.generate_avg_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">generate_avg_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hr_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.generate_avg_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the average from list of heart rates</p>
+<p>Average heart rate can be used to check the health
+status of a patient from a period of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hr_list</strong> (<em>list</em>) – recorded patient heart rates</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>average heart rate of stored values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.generate_latest_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">generate_latest_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.generate_latest_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates most recent heart rate, status, and timestamp</p>
+<p>The most recent heart rate can be used to check the current
+health status of the patient, including whether or not the
+patient is tachycardic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if no heart rates stored for that patient
+dict: latest heart rate along with status and timestamp</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.generate_select_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">generate_select_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em>, <em class="sig-param"><span class="n">sent_time</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.generate_select_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates list of heart rates from given time</p>
+<p>The series of heart rates can be used to monitor changing
+health status over time and allow the physician to make
+corresponding treatment decisions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p></li>
+<li><p><strong>sent_time</strong> (<em>str</em>) – datetime string heart rates desired since</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>error message if no heart rates stored
+list: heart rates recorded since desired time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.get_all_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">get_all_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.get_all_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all recorded heart rates from patient</p>
+<p>If requested, all recorded heart rates corresponding
+with the input patient ID are returned. The series of
+heart rates can be used to monitor changing health
+status over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, corresponding message
+list: if available, all stored patient heart rates
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.get_avg_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">get_avg_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.get_avg_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns average heart rate for given patient</p>
+<p>If requested, the average of all stored heart rates
+corresponding with the input patient ID is returned.
+Average heart rate can be used to check the health
+status of a patient from a period of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, corresponding message
+int: if available, average heart rate of patient
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.get_latest_hr">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">get_latest_hr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.get_latest_hr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns latest recorded heart rate from patient</p>
+<p>If requested, the most recent heart rate corresponding
+with the input patient ID is returned. The most recent
+heart rate can be used to check the current health
+status of the patient.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, corresponding message
+dict: if available, latest heart rate, status, timestamp
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.is_patient_in_database">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">is_patient_in_database</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.is_patient_in_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if patient has previously been added to database</p>
+<p>The patient must be in the patient database to attach
+a heart rate measurement to their file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – patient ID</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if ID present, True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.is_tachycardic">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">is_tachycardic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.is_tachycardic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if heart rate measurement indicates tachycardia</p>
+<p>Tachycardia occurs when the heart beats too quickly. The
+threshold for tachycardia varies by age, decreasing from
+151 to 100 as age increases from 1 to older than 15 years.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and heart rate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if heart rate tachycardic, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.post_heart_rate">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">post_heart_rate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.post_heart_rate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a heart rate to the patient’s stored information</p>
+<p>Measured heart rates can be added to the patient’s info
+to maintain proper records of patient heart activity
+over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results of post request
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.post_heart_rate_interval_avg">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">post_heart_rate_interval_avg</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.post_heart_rate_interval_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns average heart rate for given patient from given time</p>
+<p>If requested, the average of stored heart rates from
+the given time corresponding with the input patient ID
+is returned. Average heart rate can be used to check the
+health status of a patient from a period of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, corresponding message
+int: if available, average heart rate of patient since given time
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.post_new_patient">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">post_new_patient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.post_new_patient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new patient to the patient database via ID</p>
+<p>When a post request is made to /api/new_patient, the input
+must be validated before the patient ID, attending email,
+and patient age are added to the patient database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>results of post request
+int: HTTP status code</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.verify_heart_rate_info">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">verify_heart_rate_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.verify_heart_rate_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies post request was made with correct format</p>
+<p>The input dictionary must have the appropriate data keys
+and types, or be convertible to correct types, to be added
+to the patient database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and heart rate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, returns error message
+bool: if input verified, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.verify_id_input">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">verify_id_input</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">patient_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.verify_id_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies input ID is correct type and in database</p>
+<p>The input patient ID must be the appropriate data type,
+or be convertible to correct type, and be in the database
+to collect the corresponding heart rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>patient_id</strong> (<em>int</em>) – patient ID for information requested</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, corresponding message
+int: if correct type, patient ID</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.verify_interval_info">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">verify_interval_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.verify_interval_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies post request was made with correct format</p>
+<p>The input dictionary must have the appropriate data keys
+and types, or be convertible to correct types, to be elicit
+the correct patient heart rate data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with patient ID and datetime</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, returns error message
+bool: if input verified, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="hr_sentinel_server.verify_new_patient_info">
+<code class="sig-prename descclassname">hr_sentinel_server.</code><code class="sig-name descname">verify_new_patient_info</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">in_dict</span></em><span class="sig-paren">)</span><a class="headerlink" href="#hr_sentinel_server.verify_new_patient_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verifies post request was made with correct format</p>
+<p>The input dictionary must have the appropriate data keys
+and types, or be convertible to correct types, to be added
+to the patient database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_dict</strong> (<em>dict</em>) – input with new patient ID, physician email, and age</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>if error, returns error message
+bool: if input verified, returns True</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">hr_sentinel_server</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">hr_sentinel_server module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to hr_sentinel_server’s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Aimee McVey.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/hr_sentinel_server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

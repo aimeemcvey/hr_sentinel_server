@@ -1,8 +1,13 @@
 # Heart Rate Sentinel Server [![Build Status](https://travis-ci.com/BME547-Spring2020/hr-sentinel-server-aimeemcvey.svg?token=uYZMqDdwHppZCbLZESzP&branch=master)](https://travis-ci.com/BME547-Spring2020/hr-sentinel-server-aimeemcvey)
 This project is a centralized heart rate sentinel server. The server receives GET and POST requests from mock patient heart rate monitors that contain patient heart rate information over time. If a patient exhibits a tachycardic heart rate, the physician receives an email warning them of the situation. So if a new heart rate is received for a patient that is tachycardic, the email should be sent out at that time. 
 
-## Overview
+## Server
+The server is running at **vcm-13874.vm.duke.edu:5000**.
 
+## Instructions
+`hr_sentinel_server.py` contains the server. Examples of how to run the server are given in `hr_sentinel_client.py` as described below.
+
+## Overview
 * `POST /api/new_patient` takes the following JSON to register add a new patient to the database when a heart rate monitor is checked out and attached to a patient:
   ```
   {
@@ -47,9 +52,6 @@ This project is a centralized heart rate sentinel server. The server receives GE
   ```
 
 All routes validate input data, ensuring that the appropriate keys and types in the JSON inputs exist and are correct. If the input is incorrect, a 400 error code is returned along with an error message.
-
-## Server
-The server is running at **vcm-13874.vm.duke.edu:5000**.
 
 ## License
 MIT License

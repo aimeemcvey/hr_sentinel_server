@@ -1,6 +1,8 @@
 # Heart Rate Sentinel Server [![Build Status](https://travis-ci.com/BME547-Spring2020/hr-sentinel-server-aimeemcvey.svg?token=uYZMqDdwHppZCbLZESzP&branch=master)](https://travis-ci.com/BME547-Spring2020/hr-sentinel-server-aimeemcvey)
 This project is a centralized heart rate sentinel server. The server receives GET and POST requests from mock patient heart rate monitors that contain patient heart rate information over time. If a patient exhibits a tachycardic heart rate, the physician receives an email warning them of the situation. So if a new heart rate is received for a patient that is tachycardic, the email should be sent out at that time. 
 
+## Overview
+
 * `POST /api/new_patient` takes the following JSON to register add a new patient to the database when a heart rate monitor is checked out and attached to a patient:
   ```
   {
@@ -20,7 +22,7 @@ This project is a centralized heart rate sentinel server. The server receives GE
   ```
   As with the `/api/new_patient` route, the patient_id and heart_rate may be sent as an integer or a number string. The sent heart rate measurement is stored in the record for the specified patient along with whether the measurement is or is not tachycardic and the datetime stamp of the measurement. If the posted heart rate is tachycardic for the specified patient and patient age, an e-mail is sent to the attending physician whose e-mail address was registered in the `api/new_patient` route with the patient_id, the tachycardic heart rate, and the date/time stamp of that heart rate. If the patient is tachycardic, the server also writes to the log file with the patient ID, the heart rate, and the attending physician e-mail.
 
-* `GET /api/status/<patient_id>` returns a dictionary in a JSON string with the latest heart rate, tachycardia   status, and date/time stamp for a specified patient:
+* `GET /api/status/<patient_id>` returns a dictionary in a JSON string with the latest heart rate, tachycardia status, and date/time stamp for a specified patient:
   ```
   {
       "heart_rate": 100,
@@ -44,12 +46,10 @@ This project is a centralized heart rate sentinel server. The server receives GE
   }
   ```
 
-If inputs are incorrect
-
 All routes validate input data, ensuring that the appropriate keys and types in the JSON inputs exist and are correct. If the input is incorrect, a 400 error code is returned along with an error message.
 
 ## Server
-The server is running at hostname and port (eg., `vcm-1000.vm.duke.edu:5000`)
+The server is running at **vcm-13874.vm.duke.edu:5000**.
 
 ## License
 MIT License

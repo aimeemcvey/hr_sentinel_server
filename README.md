@@ -47,3 +47,6 @@ This project is a centralized heart rate sentinel server. The server receives GE
 If inputs are incorrect
 
 All routes validate input data, ensuring that the appropriate keys and types in the JSON inputs exist and are correct. If the input is incorrect, a 400 error code is returned along with an error message.
+
+## Server
+The server is running at hostname and port (eg., `vcm-1000.vm.duke.edu:5000`)

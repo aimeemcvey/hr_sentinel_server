@@ -2,7 +2,7 @@
 This project is a centralized heart rate sentinel server. The server receives GET and POST requests from mock patient heart rate monitors that contain patient heart rate information over time. If a patient exhibits a tachycardic heart rate, the physician receives an email warning them of the situation. So if a new heart rate is received for a patient that is tachycardic, the email should be sent out at that time. 
 
 ## Server
-The server is running at **vcm-13874.vm.duke.edu:5000**.
+The server is located at **vcm-13874.vm.duke.edu:5000**. It is NOT currently running to save resources.
 
 ## Instructions
 `hr_sentinel_server.py` contains the server. Examples of how to run the server are given in `hr_sentinel_client.py` as described below.
